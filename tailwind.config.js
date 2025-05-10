@@ -29,6 +29,7 @@ export default {
       transitionProperty: {
         'height': 'height',
         'spacing': 'margin, padding',
+        'colors': 'color, background-color, border-color, text-decoration-color, fill, stroke',
       },
       borderRadius: {
         'xl': '1rem',
@@ -40,7 +41,18 @@ export default {
       },
       screens: {
         'xs': '475px',
-      }
+      },
+      backgroundColor: {
+        dark: '#121212',
+        'dark-card': '#1e1e1e',
+      },
+    },
+  },
+  variants: {
+    extend: {
+      backgroundColor: ['dark'],
+      borderColor: ['dark'],
+      textColor: ['dark'],
     },
   },
   plugins: [],

@@ -5,12 +5,14 @@ const ThemeContext = createContext(undefined);
 export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState(() => {
     // Check if theme was previously saved in localStorage
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) return savedTheme;
-    
-    // Check for user's system preference
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      return 'dark';
+    if (typeof window !== 'undefined') {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme) return savedTheme;
+      
+      // Check for user's system preference
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        return 'dark';
+      }
     }
     
     return 'light';
@@ -19,15 +21,36 @@ export function ThemeProvider({ children }) {
   useEffect(() => {
     // Update document class when theme changes
     const root = window.document.documentElement;
-    if (theme === 'dark') {
-      root.classList.add('dark');
-    } else {
-      root.classList.remove('dark');
-    }
+    
+    // Remove both classes first to ensure clean state
+    root.classList.remove('light');
+    root.classList.remove('dark');
+    
+    // Add the current theme class
+    root.classList.add(theme);
     
     // Save to localStorage
     localStorage.setItem('theme', theme);
   }, [theme]);
+
+  // Add listener for system theme changes
+  useEffect(() => {
+    if (!window.matchMedia) return;
+    
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    
+    const handleChange = (e) => {
+      const savedTheme = localStorage.getItem('theme');
+      // Only change theme automatically if user hasn't manually set it
+      if (!savedTheme) {
+        setTheme(e.matches ? 'dark' : 'light');
+      }
+    };
+    
+    mediaQuery.addEventListener('change', handleChange);
+    
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, []);
 
   const toggleTheme = () => {
     setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
