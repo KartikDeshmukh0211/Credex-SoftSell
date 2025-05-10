@@ -7,18 +7,23 @@ import WhyChooseUs from './components/WhyChooseUs';
 import Testimonials from './components/Testimonials';
 import ContactForm from './components/ContactForm';
 import Footer from './components/Footer';
+import { ThemeProvider } from './context/ThemeContext';
 
 function App() {
   return (
-    <div className="flex flex-col min-h-screen">
-      <Header />
-      <Hero />
-      <HowItWorks />
-      <WhyChooseUs />
-      <Testimonials />
-      <ContactForm />
-      <Footer />
-    </div>
+    <ThemeProvider>
+      <div className="flex flex-col min-h-screen overflow-x-hidden dark:bg-gray-900">
+        <Header />
+        <main>
+          <Hero />
+          <HowItWorks />
+          <WhyChooseUs />
+          <Testimonials />
+          <ContactForm />
+        </main>
+        <Footer />
+      </div>
+    </ThemeProvider>
   );
 }
 
